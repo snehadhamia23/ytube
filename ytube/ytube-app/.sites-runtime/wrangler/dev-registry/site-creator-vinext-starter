@@ -1,0 +1,5 @@
+{
+  "debugPortAddress": "127.0.0.1:61097",
+  "defaultEntrypointService": "assets:rpc-proxy:site-creator-vinext-starter",
+  "userWorkerService": "core:user:site-creator-vinext-starter"
+}

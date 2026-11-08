@@ -1,0 +1,15 @@
+export type Profile={id:string;handle:string;name:string;avatar_url:string|null;location:string;language:string};
+export type Channel={id:string;owner_id:string;handle:string;name:string;description:string;avatar_url:string|null;banner_url:string|null;subscribers?:number;created_at:number};
+export type Video={id:string;channel_id:string;channel_owner_id:string;channel_name:string;channel_handle:string;channel_avatar:string|null;title:string;description:string;category:string;tags:string;media_key:string|null;thumbnail_key:string|null;sample_url:string|null;sample_thumb:number|null;duration_seconds:number;status:string;views:number;likes:number;dislikes:number;comment_count:number;subscriber_count:number;created_at:number;updated_at:number};
+export type Comment={id:string;video_id:string;parent_id:string|null;author_id:string;body:string;language:string;status:string;created_at:number;updated_at:number;version:number;report_count:number;handle:string;name:string;avatar_url:string|null;location:string;likes:number;dislikes:number;my_reaction:number|null;canEdit:boolean};
+export type Playlist={id:string;owner_id:string;title:string;description:string;visibility:string;video_count:number;created_at:number;updated_at:number};
+export type Route={view:string;id?:string;handle?:string;q?:string;category?:string;type?:string};
+export const categories=["All","Music","Gaming","Coding","Film","Travel","Food","Learning","News","Sports","Other"];
+export const languages=[{code:"en",name:"English"},{code:"hi",name:"हिन्दी"},{code:"es",name:"Español"},{code:"fr",name:"Français"},{code:"ar",name:"العربية"},{code:"de",name:"Deutsch"},{code:"pt",name:"Português"},{code:"ja",name:"日本語"},{code:"zh",name:"中文"}];
+export const languageName=(code:string)=>languages.find(l=>l.code===code)?.name||code.toUpperCase();
+export const formatViews=(count:number)=>count>=1e6?(count/1e6).toFixed(1).replace(/\.0$/,"")+"M":count>=1e3?(count/1e3).toFixed(1).replace(/\.0$/,"")+"K":String(count);
+export const formatDuration=(seconds:number)=>{const s=Math.max(0,Math.floor(seconds));return `${Math.floor(s/3600)?Math.floor(s/3600)+":" : ""}${String(Math.floor(s/60)%60).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`;};
+export const formatDate=(time:number)=>new Intl.DateTimeFormat(undefined,{month:"short",day:"numeric",year:"numeric"}).format(time);
+export const formatDateTime=(time:number)=>new Intl.DateTimeFormat(undefined,{dateStyle:"medium",timeStyle:"short"}).format(time);
+export async function api(payload:Record<string,unknown>){const r=await fetch("/api/app",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});const d=await r.json() as Record<string,any>;if(!r.ok)throw Object.assign(new Error(d.error||"Something went wrong."),d,{status:r.status});return d;}
+export async function getApi(query:Record<string,string>){const p=new URLSearchParams(query);const r=await fetch("/api/app?"+p,{cache:"no-store"});const d=await r.json() as Record<string,any>;if(!r.ok)throw new Error(d.error||"Could not load data.");return d;}
